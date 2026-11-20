@@ -260,6 +260,24 @@ aside[aria-label="Command applets"] > button { flex: none; }
   text-overflow: ellipsis;
 }
 .ai-input input::placeholder { color: var(--neutral-label-tertiary); }
+/* Animated placeholder (same behavior as the KWIQ composer in aiVisual/index-inline-ai.html):
+   rotating examples; the current line fades out + up, the next rises in from below.
+   The native placeholder stays for screen readers but is hidden visually; it disappears once there's text. */
+.ai-field { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; }
+.ai-field input { width: 100%; }
+.ai-field input::placeholder { color: transparent; }
+.ai-ph {
+  position: absolute; inset: 0; display: flex; align-items: center; overflow: hidden; pointer-events: none;
+  font-size: 14px; line-height: 20px; color: var(--neutral-label-tertiary); transition: opacity .15s ease;
+}
+.ai-field input:not(:placeholder-shown) + .ai-ph { opacity: 0; }
+.ai-ph-text {
+  display: block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  transition: opacity .4s ease, transform .4s cubic-bezier(.4, 0, .2, 1);
+}
+.ai-ph-text[data-out] { opacity: 0; transform: translateY(-10px); }
+.ai-ph-text[data-below] { opacity: 0; transform: translateY(10px); transition: none; }
+@media (prefers-reduced-motion: reduce) { .ai-ph-text, .ai-ph-text[data-out] { transform: none; } }
 /* mic: XDS borderless icon button, 40px, 24px icon, neutral.action */
 .ai-mic {
   width: 40px; height: 40px; flex: none; display: grid; place-items: center; padding: 0;
@@ -559,7 +577,10 @@ button:disabled { opacity: .4; cursor: not-allowed !important; }
             <p class="t-text14 secondary">Ask Command AI who to call today, what to prep for, or where your pipeline needs attention.</p>
             <div class="ai-input-wrap">
             <form class="ai-input" onsubmit="askAI(event)">
-              <input id="ai-q" type="text" placeholder="Ask anything..." aria-label="Ask Command AI">
+              <span class="ai-field">
+                <input id="ai-q" type="text" placeholder="Ask anything..." aria-label="Ask Command AI">
+                <span class="ai-ph" aria-hidden="true"><span class="ai-ph-text" id="ai-ph-text">Ask anything...</span></span>
+              </span>
               <button type="button" class="ai-mic" aria-label="Use voice" onclick="toast('Listening…')">
                 <svg aria-hidden="true" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path></svg>
               </button>
@@ -755,7 +776,7 @@ function promptCard(p, i) {
       <h3 class="t-text14" style="font-weight:700;">${p.q}</h3>
       <p class="t-text12 secondary">${p.d}</p>
       <div class="row-end">
-        <button type="button" class="ai-btn" onclick="runPrompt(${i % PROMPTS.length})">Get Started</button>
+        <button type="button" class="ai-btn">Get Started</button>
       </div>
     </div>`;
 }
@@ -765,7 +786,8 @@ function renderPrompts() {
   document.getElementById('prompt-dots').innerHTML = PROMPTS.map((_, i) =>
     `<button class="dot" aria-label="Show suggestion ${i + 1}" onclick="setPromptPage(${i})"></button>`).join('');
   track.addEventListener('transitionend', e => {
-    if (e.target === track && pIdx >= PROMPTS.length) { pIdx -= PROMPTS.length; placePrompts(false); }
+    if (e.target !== track) return;
+    if (pIdx >= PROMPTS.length) { pIdx -= PROMPTS.length; placePrompts(false); }
   });
   placePrompts(false);
 }
@@ -778,7 +800,7 @@ function placePrompts(animate) {
   document.querySelectorAll('#prompt-dots .dot').forEach((d, i) => d.setAttribute('aria-current', i === pIdx % PROMPTS.length));
 }
 function normalizePrompts() { if (pIdx >= PROMPTS.length) { pIdx -= PROMPTS.length; placePrompts(false); } }
-function setPromptPage(i) { normalizePrompts(); pIdx = i; placePrompts(true); }
+function setPromptPage(i) { normalizePrompts(); if (i === pIdx) return; pIdx = i; placePrompts(true); }
 function pagePrompts(dir) {
   normalizePrompts();
   if (dir < 0 && pIdx === 0) { pIdx = PROMPTS.length; placePrompts(false); } // wrap backward via the clones
@@ -900,7 +922,36 @@ function toast(msg) {
   clearTimeout(tt); tt = setTimeout(() => el.classList.remove('show'), 2200);
 }
 
-renderPrompts(); renderTasks(); renderLeads();
+/* ───────── Animated placeholder ─────────
+   Example prompts that rotate in the AI input. Kept distinct from the suggested prompt cards. */
+const PH_EXAMPLES = [
+  'Which of my opportunities are missing documents?',
+  'Which of my offers are still open?',
+  'Who has a home anniversary this month?',
+  'Which contacts are missing a phone or email?',
+  'Add a contact',
+  'Update a contact’s phone or email',
+  'How’s the market in my area?',
+];
+function startPlaceholder() {
+  const el = document.getElementById('ai-ph-text');
+  let i = 0;
+  el.textContent = PH_EXAMPLES[0];
+  setInterval(() => {
+    if (document.hidden) return;
+    el.setAttribute('data-out', '');
+    setTimeout(() => {
+      i = (i + 1) % PH_EXAMPLES.length;
+      el.textContent = PH_EXAMPLES[i];
+      el.removeAttribute('data-out');
+      el.setAttribute('data-below', '');
+      void el.offsetWidth; // commit the below position before animating in
+      el.removeAttribute('data-below');
+    }, 400);
+  }, 3200);
+}
+
+renderPrompts(); renderTasks(); renderLeads(); startPlaceholder();
 </script>
 </body>
 </html>
