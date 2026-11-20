@@ -440,7 +440,7 @@ button:disabled { opacity: .4; cursor: not-allowed !important; }
     <div style="flex:1;"></div>
     <div style="display:flex;align-items:center;gap:18px;padding-right:22px;">
       <!-- KWIQ -->
-      <button data-kwiq-open="" title="Command AI" onclick="document.getElementById('ai-q').focus()" style="display:inline-flex;align-items:center;gap:8px;height:40px;border:1.5px solid transparent;border-radius:999px;background:linear-gradient(#262932,#262932) padding-box,linear-gradient(90deg,#AF75FF,#359AF3,#0CADD3) border-box;cursor:pointer;padding:0 16px 0 13px;">
+      <button data-kwiq-open="" title="Command AI" style="display:inline-flex;align-items:center;gap:8px;height:40px;border:1.5px solid transparent;border-radius:999px;background:linear-gradient(#262932,#262932) padding-box,linear-gradient(90deg,#AF75FF,#359AF3,#0CADD3) border-box;cursor:pointer;padding:0 16px 0 13px;">
         <span style="display:flex;color:#fff;flex:none;"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 6C22 4.89543 21.1046 4 20 4C18.8954 4 18 4.89543 18 6C18 12.6274 12.6274 18 6 18C4.89543 18 4 18.8954 4 20C4 21.1046 4.89543 22 6 22C12.6274 22 18 27.3726 18 34C18 35.1046 18.8954 36 20 36C21.1046 36 22 35.1046 22 34C22 27.3726 27.3726 22 34 22C35.1046 22 36 21.1046 36 20C36 18.8954 35.1046 18 34 18C27.3726 18 22 12.6274 22 6Z" fill="currentColor"/><path d="M50 18C50 16.8954 49.1046 16 48 16C46.8954 16 46 16.8954 46 18C46 20.6976 45.1861 22.6454 43.9157 23.9157C42.6454 25.1861 40.6976 26 38 26C36.8954 26 36 26.8954 36 28C36 29.1046 36.8954 30 38 30C40.6976 30 42.6454 30.8139 43.9157 32.0843C45.1861 33.3546 46 35.3024 46 38C46 39.1046 46.8954 40 48 40C49.1046 40 50 39.1046 50 38C50 35.3024 50.8139 33.3546 52.0843 32.0843C53.3546 30.8139 55.3024 30 58 30C59.1046 30 60 29.1046 60 28C60 26.8954 59.1046 26 58 26C55.3024 26 53.3546 25.1861 52.0843 23.9157C50.8139 22.6454 50 20.6976 50 18Z" fill="currentColor"/><path d="M34 38C34 36.8954 33.1046 36 32 36C30.8954 36 30 36.8954 30 38C30 40.6976 29.1861 42.6454 27.9157 43.9157C26.6454 45.1861 24.6976 46 22 46C20.8954 46 20 46.8954 20 48C20 49.1046 20.8954 50 22 50C24.6976 50 26.6454 50.8139 27.9157 52.0843C29.1861 53.3546 30 55.3024 30 58C30 59.1046 30.8954 60 32 60C33.1046 60 34 59.1046 34 58C34 55.3024 34.8139 53.3546 36.0843 52.0843C37.3546 50.8139 39.3024 50 42 50C43.1046 50 44 49.1046 44 48C44 46.8954 43.1046 46 42 46C39.3024 46 37.3546 45.1861 36.0843 43.9157C34.8139 42.6454 34 40.6976 34 38Z" fill="currentColor"/></svg></span>
         <span style="font:var(--fw-bold) 14px/20px var(--font-sans);color:#fff;white-space:nowrap;letter-spacing:.01em;">Command AI</span>
       </button>
@@ -730,16 +730,20 @@ button:disabled { opacity: .4; cursor: not-allowed !important; }
 const PROMPTS = [
   { q: 'Who should I contact today?', d: 'Start with the contacts most likely to move a deal forward',
     a: 'Call Marcus Lee first. He opened your listing email twice this morning. Then follow up with the Garzas before tomorrow\'s appointment.' },
-  { q: 'What\'s due today?', d: 'See today\'s to-dos without digging through your task list',
+  { q: 'What’s due today?', d: 'See today’s to-dos without digging through your task list',
     a: 'You have 3 tasks due today: send the CMA to the Patels, confirm Saturday\'s open house, and call back Dana Brooks.' },
   { q: 'How close am I to capping?', d: 'Know when you start keeping more of each commission',
     a: 'You\'re 78% of the way to cap. About 2 more closings at your average price gets you there.' },
-  { q: 'Where\'s my pipeline stuck?', d: 'Find deals that haven\'t moved in a while',
-    a: '4 opportunities have been in "Showing" for 30+ days. Want me to draft check-in texts?' },
-  { q: 'Prep me for my next meeting', d: 'Get a quick brief before you walk in',
-    a: 'Your 10 AM is a listing appointment with the Garzas. Comparable homes nearby sold for $412K–$438K in the last 90 days.' },
-  { q: 'Who has a birthday this week?', d: 'Send a note before the day slips by',
-    a: '3 contacts have birthdays this week. Amy Chen\'s is today. Want me to draft a message?' },
+  { q: 'How do I start a SmartPlan?', d: 'Set up automatic follow-up for your contacts',
+    a: 'Pick a SmartPlan template, choose the contacts to enroll, and set a start date. Want me to suggest a plan for your 23 leads you haven\'t contacted?' },
+  { q: 'What’s my GCI this year?', d: 'Track what you’ve earned so far this year',
+    a: 'Your GCI so far this year is $148,600 across 14 closings, up 12% from this time last year.' },
+  { q: 'Which opportunities are closing this month?', d: 'See which deals need attention before they close',
+    a: '3 opportunities are set to close this month. The Patel closing on Nov 25 still needs the inspection report reviewed.' },
+  { q: 'Pull comps for a property', d: 'Get recent nearby sales to help price a listing',
+    a: 'Tell me the address and I\'ll pull sales from the last 90 days within half a mile, matched on beds, baths, and square footage.' },
+  { q: 'Update my profile', d: 'Keep your contact info and bio current for clients',
+    a: 'Your profile was last updated 8 months ago. Want to review your phone number, headshot, and bio now?' },
 ];
 /* Looping carousel: shows 3 cards, slides one card at a time when the user clicks an arrow or dot.
    The first 3 cards are cloned onto the end so the loop wraps without a visible jump. */
@@ -751,7 +755,7 @@ function promptCard(p, i) {
       <h3 class="t-text14" style="font-weight:700;">${p.q}</h3>
       <p class="t-text12 secondary">${p.d}</p>
       <div class="row-end">
-        <button type="button" class="ai-btn" onclick="runPrompt(${i % PROMPTS.length})">Ask This</button>
+        <button type="button" class="ai-btn" onclick="runPrompt(${i % PROMPTS.length})">Get Started</button>
       </div>
     </div>`;
 }
