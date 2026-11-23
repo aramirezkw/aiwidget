@@ -291,7 +291,7 @@ aside[aria-label="Command applets"] > button { flex: none; }
   background: var(--ai-gradient);
 }
 .ai-send:active { background: var(--ai-grad-action-active); filter: brightness(.95); }
-.ai-input:has(input:placeholder-shown) .ai-send { background: var(--ai-grad-action); opacity: .5; }
+.ai-input:has(input:placeholder-shown) .ai-send { background: var(--ai-gradient); opacity: .5; }
 .prompt-viewport { overflow: hidden; margin: -4px; padding: 4px; } /* padding keeps focus rings visible */
 .prompt-track {
   display: flex; gap: var(--space-4);
@@ -404,7 +404,7 @@ tr.done td.task-name { text-decoration: line-through; color: var(--neutral-label
   height: 32px; padding: 0 var(--space-2); border: 1px solid transparent; border-radius: 4px;
   font-family: 'Mulish', sans-serif; font-size: 12px; line-height: 16px; font-weight: 700; white-space: nowrap;
   color: var(--system-action); cursor: pointer;
-  background: linear-gradient(#fff, #fff) padding-box, var(--ai-grad-action) border-box;
+  background: linear-gradient(#fff, #fff) padding-box, var(--ai-gradient) border-box;
 }
 .ai-btn:hover {
   color: var(--system-action-hover);
